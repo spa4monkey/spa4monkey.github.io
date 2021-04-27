@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+    <link rel="stylesheet" href="cssone/style.css">
+    <script type="text/javascript" src="javascript/sketch.js"></script>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.4.1/firebase-app.js"></script>
+    <script defer src="/__/firebase/8.4.1/firebase-firestore.js"></script>
+    <!--
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  </head>
+  <body>
+
+    <!-- ここに、webにどう表示させるか書き込む -->
+    <h1>DataBase</h1>
+    <div id="data_view">
+
+      <!-- ボタン なんか反対になっちゃったから後々直す必要あり-->
+      <div align="center">
+          <input type="button" value="Last One" class="button_last" onclick="modoru()">
+          <input type="button" value="Next One" class="button_last" onclick="susumu()">
+      </div>
+
+      <!-- データの中身 -->
+      <div class ="contents">
+        <p id="Record_number">レコードナンバー</p>
+        <div class ="image_view">
+          <img src="" id="img" width="40%">
+        </div>
+        <p id="Day">登録日</p>
+        <p id="Spot">撮影場所</p>
+        <p id="Name">製品名</p>
+        <p id="Category">カテゴリー</p>
+        <p id="Type">省力化タイプ</p>
+        <p id="Resistant">登録者</p>
+
+      </div>
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+    <script>
+
+      // データのやりとり関連はここの<script>間でいじる
+
+      // ここで読み込むfirebaseの住所を取得。各々のものに変更
+      var firebaseConfig = {
+         apiKey: "AIzaSyAL3faIdr7ffTo7ddK6w82w_1qqqlk52u8",
+         authDomain: "servicedesign001-b8f37.firebaseapp.com",
+         projectId: "servicedesign001-b8f37",
+         storageBucket: "servicedesign001-b8f37.appspot.com",
+         messagingSenderId: "564083577144",
+         appId: "1:564083577144:web:c7190bc3dbf332ffc771cd",
+         measurementId: "G-ZJFLXX596Y"
+       };
+
+      // firebaseのどの機能を使うか指定
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+
+      //　ここで自分のfirebasestoreを参照する
+      var db = firebase.firestore();
+      var LIST = [];  //ID保管用
+
+      //　ここでfirestoreにあるデータを全部所得する
+      window.onload = function(){
+        db.collection("users").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+              //console.log(doc.id, " => ", doc.data());
+              var data = doc.data();
+              LIST.push(data);
+
+              //　ここで要素数を取得している
+              const elements_number = LIST.length - 1;
+              console.log(elements_number);
+
+              //dekita ato ni list tsukattemo daijoubu
+              drawelements(0);
+          });
+      });
+
+    }
+
+
+      var drawelements = function(order){
+        rec = document.getElementById("Record_number");
+        rec.innerHTML = "<p>NO." + LIST[order].Record_number + "</p>"
+        img = document.getElementById("img");
+        img.src = LIST[order].Image;
+        //console.log(LIST[order].Image);
+        // img.innerHTML = "<img src ='" + LIST[order].Image + "'>"
+        day = document.getElementById("Day");
+        day.innerHTML = "<p>登録日：" + LIST[order].Day + "</p>"
+        spo = document.getElementById("Spot");
+        spo.innerHTML = "<p>撮影場所：" + LIST[order].Spot + "</p>"
+        nam = document.getElementById("Name");
+        nam.innerHTML = "<p>製品名：" + LIST[order].Name + "</p>"
+        cat = document.getElementById("Category");
+        cat.innerHTML = "<p>カテゴリー：" + LIST[order].Category + "</p>"
+        typ = document.getElementById("Type");
+        typ.innerHTML = "<p>省力化タイプ：" + LIST[order].Type + "</p>"
+        res = document.getElementById("Resistant");
+        res.innerHTML = "<p>登録者：" + LIST[order].Resistant + "</p>"
+
+      }
+
+      //ここ絶対おかしい、後々直さないと
+
+      var i = 0;
+      console.log(i);
+
+      function modoru(){
+        i = i - 1;
+        if(i < 0){
+            i = 2;
+          drawelements(i);
+          }else{
+          }
+          drawelements(i);
+        console.log(i);
+        }
+
+
+        function susumu(){
+          i = i + 1;
+          if(i > 2){
+              i = 0;
+            drawelements(i);
+            }else{
+            }
+            drawelements(i);
+          console.log(i);
+          }
+
+
+    </script>
+
+
+  </body>
+</html>
